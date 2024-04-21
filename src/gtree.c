@@ -56,10 +56,10 @@ bool tree_delete_recursive(tree_t *tree, tree_t *last_node, char *path) {
     return true;
   }
   if (*path == 'c') {
-    return tree_delete(tree_ptr_get_attr_ptr(tree, child), path + 1);
+    return tree_delete_recursive(tree_ptr_get_attr_ptr(tree, child), last_node, path + 1);
   }
   if (*path == 'b') {
-    return tree_delete(tree_ptr_get_attr_ptr(tree, brother), path + 1);
+    return tree_delete_recursive(tree_ptr_get_attr_ptr(tree, brother), last_node, path + 1);
   }
 
   return false;
@@ -81,8 +81,8 @@ void tree_print_recursive(tree_t tree, int h) {
     printf(":");
   }
   printf("\n");
-  tree_print(tree->child);
-  tree_print(tree->brother);
+  tree_print_recursive(tree->child, h + 1);
+  tree_print_recursive(tree->brother, h);
 }
 
 void tree_print(tree_t tree) {
@@ -116,13 +116,6 @@ double tree_find_max_non_terminating(tree_t *tree) {
   }
   stack_destroy(stack);
   return max_value;
-
-  // tree_find_max_non_terminating(tree_ptr_get_attr_ptr(tree, child), max_value);
-  // tree_find_max_non_terminating(tree_ptr_get_attr_ptr(tree, brother), max_value);
-  // if (tree_ptr_get_attr(tree, value) > *max_value && (tree_ptr_get_attr(tree, child) != NULL ||
-  //   tree_ptr_get_attr(tree, brother) != NULL)) {
-  //   *max_value = tree_ptr_get_attr(tree, value);
-  // }
 }
 
 bool tree_is_empty(tree_t tree) {

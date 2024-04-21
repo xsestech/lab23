@@ -72,12 +72,6 @@ void cli_run_until_eof(cli_handle_t cli) {
   }
 }
 void cli_destroy(cli_handle_t cli) {
-  // if (cli->commands) {
-  //   for (int i = 0; i < vector_size(cli->commands); i++) {
-  //     free(cli->commands[i].command_args);
-  //     cli->commands[i].command_args = NULL;
-  //   }
-  // }
   free(cli->commands[0].command_args);
   vector_destroy(cli->commands);
   free(cli);
