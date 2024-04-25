@@ -96,6 +96,25 @@ void tree_destroy(tree_t *tree) {
   tree_destroy(tree_ptr_get_attr_ptr(tree, brother));
   free(*tree);
 }
+
+bool tree_is_terminating(tree_t* tree) {
+  return tree_ptr_get_attr(tree, child) == NULL && tree_ptr_get_attr(tree, brother) == NULL;
+}
+
+bool tree_is_nonterminating(tree_t* tree) {
+  if(tree_ptr_get_attr(tree, child) != NULL) {
+    if(!tree_is_terminating(tree_ptr_get_attr_ptr(tree, child))) {
+      return false;
+    }
+  }
+  if(tree_ptr_get_attr(tree, brother) != NULL) {
+    if(!tree_is_terminating(tree_ptr_get_attr_ptr(tree, brother))) {
+      return false;
+    }
+  }
+  return true;
+}
+
 double tree_find_max_non_terminating(tree_t *tree) {
   if (*tree == NULL) return DBL_MIN;
   double max_value = DBL_MIN;
@@ -109,8 +128,7 @@ double tree_find_max_non_terminating(tree_t *tree) {
     if(tree_ptr_get_attr(tree_tmp, brother) != NULL) {
       stack_push(stack, tree_ptr_get_attr_ptr(tree_tmp, brother));
     }
-    if (tree_ptr_get_attr(tree_tmp, value) > max_value && (tree_ptr_get_attr(tree_tmp, child) != NULL ||
-    tree_ptr_get_attr(tree_tmp, brother) != NULL)) {
+    if (tree_ptr_get_attr(tree_tmp, value) > max_value && tree_is_nonterminating(tree_tmp)) {
       max_value = tree_ptr_get_attr(tree_tmp, value);
     }
   }
